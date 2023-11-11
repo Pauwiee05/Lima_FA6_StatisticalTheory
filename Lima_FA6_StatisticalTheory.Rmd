@@ -1,0 +1,99 @@
+---
+title: "Lima_FA6_StatisticalTheory"
+author: "Paul Carlos T. Lima I"
+date: "2023-11-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load the Dataset
+
+```{r}
+# Creating the dataset
+data <- data.frame(
+  Participant = 1:24,
+  Cloak = c(rep(0, 12), rep(1, 12)),
+  Mischief = c(3, 1, 5, 4, 6, 4, 6, 2, 0, 5, 4, 5, 4, 3, 6, 6, 8, 5, 5, 4, 2, 5, 7, 5)
+)
+
+# Separate data into two groups
+group_0 <- data$Mischief[data$Cloak == 0]
+group_1 <- data$Mischief[data$Cloak == 1]
+```
+
+# Independent Samples T-Test and its Results
+
+```{r}
+
+
+# Welch's Independent samples t-test
+welch_t_test_result <- t.test(group_0, group_1)
+# Independent samples t-test assuming equal variances
+t_test_result <- t.test(group_0, group_1, var.equal = TRUE)
+
+# Display t-test results
+welch_t_test_result
+t_test_result
+```
+
+# Assumption Checking
+
+### Assumption 1 : Normality of the Data
+```{r}
+# Check normality using a Q-Q plot
+qqnorm(data$Mischief)
+qqline(data$Mischief)
+
+```
+
+The Q-Q plot is used to visually assess the normality of the Mischief scores for both groups. Additionally, the Shapiro-Wilk test is performed for each group to provide a formal statistical test for normality. The p-values from these tests help determine if the assumption of normality is met.
+
+### Assumption 2: Homogeneity of Variances
+
+```{r}
+# Perform Levene's test for homogeneity of variances
+homogeneity_test <- var.test(Mischief ~ Cloak, data = data)
+homogeneity_test
+
+```
+
+Levene's test is used to assess whether the variances of Mischief scores are equal between the two groups (with and without the cloak). A non-significant result (p > 0.05) suggests that the assumption of homogeneity of variances is met.
+
+### Assumption 3: Independence of Observations
+
+The assumption of independence is assumed based on the understanding that the data is collected independently. This assumption is often met in experimental designs and random sampling processes.
+
+### Assumption 4: Scale of Measurement
+
+The assumption that Mischief scores are measured on an interval scale is a common assumption in statistical analyses. An interval scale assumes equal intervals between values, allowing for meaningful interpretation of the t-test results.
+
+### Assumption 5: Random Sampling
+
+The assumption of random sampling implies that the data is collected through a process where each participant has an equal chance of being included. Random sampling enhances the generalizability of the findings to the broader population.
+
+
+# Short Report
+
+The results of the independent samples t-test, based on equal variances assumption, show:
+
+t-value: 
+```{r} 
+t_test_result$statistic
+```
+
+Degrees of freedom:
+```{r} 
+t_test_result$parameter
+```
+
+p-value:
+```{r}
+t_test_result$p.value
+```
+
+The findings indicate a significant difference in mischief scores between participants with and without the Invisibility Cloak. The p-value is less than 0.05, leading to the rejection of the null hypothesis. Therefore, it is concluded that there is a significant association between the presence of the Invisibility Cloak and participants' mischief scores.
+
+In summary, wearing the Invisibility Cloak appears to be linked to a significant change in participants' mischief scores, as revealed by the results of the independent samples t-test.
